@@ -80,7 +80,7 @@ for i in range(1, n + 1):
         # Проверяем, что введенное число положительное
         if km <= 0 and flag == 0:
             print("\033[31m", "Расстояние до дома должно быть задано положительным числом !!!" + '\033[0m')
-    array_km.append([str(km) + '.' + str(i)])
+    array_km.append([km + i / 10 ** len(str(i))])
 # сортируем сотрудников по расстоянию до дома(по возрастанию)
 merge_sort_increase(array_km)
 
@@ -101,15 +101,15 @@ for i in range(1, n + 1):
         # Проверяем, что введенное число положительное
         if rate <= 0 and flag == 0:
             print("\033[31m", "Стоимость должно быть задано положительным числом !!!" + '\033[0m')
-    array_cost.append([str(rate) + '.' + str(i)])
+    array_cost.append([rate + i / 10 ** len(str(i))])
 # сортируем такси по тарифу в рублях(по убыванию)
 merge_sort_decrease(array_cost)
 
 #  массив: номер сотрудника, номер такси, стоимость поездки
 array_ride = []
 for i in range(0, n):
-    array_km_split = array_km[i][0].split('.')
-    array_cost_split = array_cost[i][0].split('.')
+    array_km_split = str(array_km[i][0]).split('.')
+    array_cost_split = str(array_cost[i][0]).split('.')
     array_ride.append([array_km_split[1] + '.' + array_cost_split[1] + '.' + str(int(array_km_split[0]) * int(array_cost_split[0]))])
 #  сортируем сотрудников по их номеру (по возрастанию)
 merge_sort_increase(array_ride)
