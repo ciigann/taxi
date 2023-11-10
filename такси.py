@@ -1,4 +1,54 @@
 from num2words import num2words
+# Сортировка слиянием по убывание
+def merge_sort_decrease(nums):
+    if len(nums) > 1:
+        mid = len(nums) // 2
+        left = nums[:mid]
+        right = nums[mid:]
+        merge_sort_decrease(left)
+        merge_sort_decrease(right)
+        i = j = k = 0
+        while i < len(left) and j < len(right):
+            if left[i] > right[j]:
+                nums[k] = left[i]
+                i += 1
+            else:
+                nums[k] = right[j]
+                j += 1
+            k += 1
+        while i < len(left):
+            nums[k] = left[i]
+            i += 1
+            k += 1
+        while j < len(right):
+            nums[k] = right[j]
+            j += 1
+            k += 1
+# Сортировка слиянием по возрастанию
+def merge_sort_increase(nums):
+    if len(nums) > 1:
+        mid = len(nums) // 2
+        left = nums[:mid]
+        right = nums[mid:]
+        merge_sort_increase(left)
+        merge_sort_increase(right)
+        i = j = k = 0
+        while i < len(left) and j < len(right):
+            if left[i] < right[j]:
+                nums[k] = left[i]
+                i += 1
+            else:
+                nums[k] = right[j]
+                j += 1
+            k += 1
+        while i < len(left):
+            nums[k] = left[i]
+            i += 1
+            k += 1
+        while j < len(right):
+            nums[k] = right[j]
+            j += 1
+            k += 1
 
 n = 0
 while n <= 0:
@@ -14,7 +64,7 @@ while n <= 0:
     if n <= 0 and flag == 0:
         print("\033[31m", "Количество сотрудников должно быть задано положительным числом !!!" + '\033[0m')
 
-array_km = []  # массив: номер сотрудника, расстоянием до дома
+array_km = []  # массив: расстоянием до дома + номер сотрудника
 print('\033[1m' + 'Введите поочередно расстояние до дома: ' + '\033[0m')
 for i in range(1, n + 1):
     km = 0
@@ -30,9 +80,9 @@ for i in range(1, n + 1):
         # Проверяем, что введенное число положительное
         if km <= 0 and flag == 0:
             print("\033[31m", "Расстояние до дома должно быть задано положительным числом !!!" + '\033[0m')
-    array_km.append([i, km])
+    array_km.append([str(km) + '.' + str(i)])
 # сортируем сотрудников по расстоянию до дома(по возрастанию)
-array_km.sort(key=lambda x: x[1])
+merge_sort_increase(array_km)
 
 #  массив: номер машины, тариф
 array_cost = []
@@ -51,25 +101,29 @@ for i in range(1, n + 1):
         # Проверяем, что введенное число положительное
         if rate <= 0 and flag == 0:
             print("\033[31m", "Стоимость должно быть задано положительным числом !!!" + '\033[0m')
-    array_cost.append([i, rate])
+    array_cost.append([str(rate) + '.' + str(i)])
 # сортируем такси по тарифу в рублях(по убыванию)
-array_cost.sort(key=lambda x: x[1], reverse=True)
+merge_sort_decrease(array_cost)
 
 #  массив: номер сотрудника, номер такси, стоимость поездки
 array_ride = []
 for i in range(0, n):
-    array_ride.append([array_km[i][0], array_cost[i][0], array_km[i][1] * array_cost[i][1]])
-#  сортируем сотрудников по их номеру
-array_ride.sort(key=lambda x: x[0])
+    array_km_split = array_km[i][0].split('.')
+    array_cost_split = array_cost[i][0].split('.')
+    array_ride.append([array_km_split[1] + '.' + array_cost_split[1] + '.' + str(int(array_km_split[0]) * int(array_cost_split[0]))])
+#  сортируем сотрудников по их номеру (по возрастанию)
+merge_sort_increase(array_ride)
 
 print('\033[1m' + 'Оптимальный вариант рассадки сотрудников: ' + '\033[0m')
 for i in range(0, n):
-    print(f'{array_ride[i][1]} такси для {i + 1} сотрудника, ', end='')
+    array_ride_split = array_ride[i][0].split('.')
+    print(f'{array_ride_split[1]} такси для {i + 1} сотрудника, ', end='')
 
 #  Рассчитываем общую стоимость поездки
 cost = 0
 for i in range(0, n):
-    cost += array_ride[i][2]
+    array_ride_split = array_ride[i][0].split('.')
+    cost += int(array_ride_split[2])
 print('\033[1m' + '\n\nОбщая стоимость поездок составит: ' + '\033[0m' + f'{cost} рубля')
 
 # Преобразуем число в слова с помощью num2words
